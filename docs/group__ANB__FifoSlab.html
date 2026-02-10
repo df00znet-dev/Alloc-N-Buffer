@@ -113,14 +113,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga85588d50f388a26090f4009a9bc5cff3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new buffer queue.  <br /></td></tr>
 <tr class="memitem:ga3120cdc67a98ffeb81dfbd9d271d6443" id="r_ga3120cdc67a98ffeb81dfbd9d271d6443"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3120cdc67a98ffeb81dfbd9d271d6443">ANB_fifoslab_destroy</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue)</td></tr>
 <tr class="memdesc:ga3120cdc67a98ffeb81dfbd9d271d6443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a buffer queue and free its memory.  <br /></td></tr>
-<tr class="memitem:ga33e69ac05b03961608f846a4eab94ddb" id="r_ga33e69ac05b03961608f846a4eab94ddb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33e69ac05b03961608f846a4eab94ddb">ANB_fifoslab_push</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue, const uint8_t *data, size_t data_len)</td></tr>
-<tr class="memdesc:ga33e69ac05b03961608f846a4eab94ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push data onto the end of the queue.  <br /></td></tr>
-<tr class="memitem:gac678237db75bb5f1b7b3d906f338ac2a" id="r_gac678237db75bb5f1b7b3d906f338ac2a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac678237db75bb5f1b7b3d906f338ac2a">ANB_fifoslab_peek_size</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue)</td></tr>
-<tr class="memdesc:gac678237db75bb5f1b7b3d906f338ac2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of bytes available to read (including alignment padding).  <br /></td></tr>
-<tr class="memitem:ga2747deed2b3353c35fef9a9df5d6c10a" id="r_ga2747deed2b3353c35fef9a9df5d6c10a"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2747deed2b3353c35fef9a9df5d6c10a">ANB_fifoslab_peek</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue, size_t requested_len)</td></tr>
-<tr class="memdesc:ga2747deed2b3353c35fef9a9df5d6c10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at data without consuming it.  <br /></td></tr>
-<tr class="memitem:ga40a29b49510151e331ab8023eb3be8bd" id="r_ga40a29b49510151e331ab8023eb3be8bd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga40a29b49510151e331ab8023eb3be8bd">ANB_fifoslab_pop</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue, size_t requested_len)</td></tr>
-<tr class="memdesc:ga40a29b49510151e331ab8023eb3be8bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Consume bytes from the front of the queue.  <br /></td></tr>
+<tr class="memitem:ga4875699f398f535e9325e81fe230fee8" id="r_ga4875699f398f535e9325e81fe230fee8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4875699f398f535e9325e81fe230fee8">ANB_fifoslab_push_item</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue, const uint8_t *data, size_t data_len)</td></tr>
+<tr class="memdesc:ga4875699f398f535e9325e81fe230fee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push data onto the end of the queue as a discrete item.  <br /></td></tr>
+<tr class="memitem:gacff07453b8629c5f5c6f72daad54df63" id="r_gacff07453b8629c5f5c6f72daad54df63"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacff07453b8629c5f5c6f72daad54df63">ANB_fifoslab_size</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue)</td></tr>
+<tr class="memdesc:gacff07453b8629c5f5c6f72daad54df63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total number of bytes currently in use (including alignment padding).  <br /></td></tr>
 <tr class="memitem:ga6e45c9a19e16100560dbb119101e0c95" id="r_ga6e45c9a19e16100560dbb119101e0c95"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6e45c9a19e16100560dbb119101e0c95">ANB_fifoslab_item_count</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue)</td></tr>
 <tr class="memdesc:ga6e45c9a19e16100560dbb119101e0c95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of discrete items in the queue.  <br /></td></tr>
 <tr class="memitem:gac24a0e13b4d59b7ea5e4fa2408a47946" id="r_gac24a0e13b4d59b7ea5e4fa2408a47946"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac24a0e13b4d59b7ea5e4fa2408a47946">ANB_fifoslab_peek_item</a> (<a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *queue, size_t n, size_t *out_size)</td></tr>
@@ -146,7 +142,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Opaque FIFO slab allocator / buffer queue with item tracking. </p>
-<p>All pushed data is padded to max_align_t alignment. Sizes reported by peek_size, peek_item, pop, and pop_item reflect the aligned size, not the original data_len passed to push. </p>
+<p>All pushed data is padded to max_align_t alignment. Sizes reported by peek_item and pop_item reflect the aligned size, not the original data_len passed to push_item. </p>
 
 </div>
 </div>
@@ -246,38 +242,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga2747deed2b3353c35fef9a9df5d6c10a" name="ga2747deed2b3353c35fef9a9df5d6c10a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2747deed2b3353c35fef9a9df5d6c10a">&#9670;&#160;</a></span>ANB_fifoslab_peek()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t * ANB_fifoslab_peek </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *</td>          <td class="paramname"><span class="paramname"><em>queue</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>requested_len</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Peek at data without consuming it. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">queue</td><td>The queue. </td></tr>
-    <tr><td class="paramname">requested_len</td><td>Minimum bytes required. Must be &gt; 0. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Pointer to the read position, or NULL if fewer than requested_len bytes are available, or if queue is NULL or requested_len is 0. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The returned pointer is valid until the next push or pop. Caller must only read up to requested_len bytes from the returned pointer. </dd></dl>
-
-</div>
-</div>
 <a id="gac24a0e13b4d59b7ea5e4fa2408a47946" name="gac24a0e13b4d59b7ea5e4fa2408a47946"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac24a0e13b4d59b7ea5e4fa2408a47946">&#9670;&#160;</a></span>ANB_fifoslab_peek_item()</h2>
 
@@ -354,64 +318,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gac678237db75bb5f1b7b3d906f338ac2a" name="gac678237db75bb5f1b7b3d906f338ac2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac678237db75bb5f1b7b3d906f338ac2a">&#9670;&#160;</a></span>ANB_fifoslab_peek_size()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ANB_fifoslab_peek_size </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *</td>          <td class="paramname"><span class="paramname"><em>queue</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the number of bytes available to read (including alignment padding). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">queue</td><td>The queue. Must not be NULL. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Total unread bytes in the queue (sum of aligned item sizes). </dd></dl>
-
-</div>
-</div>
-<a id="ga40a29b49510151e331ab8023eb3be8bd" name="ga40a29b49510151e331ab8023eb3be8bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga40a29b49510151e331ab8023eb3be8bd">&#9670;&#160;</a></span>ANB_fifoslab_pop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ANB_fifoslab_pop </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *</td>          <td class="paramname"><span class="paramname"><em>queue</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>requested_len</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Consume bytes from the front of the queue. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">queue</td><td>The queue. </td></tr>
-    <tr><td class="paramname">requested_len</td><td>Number of bytes to consume. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of bytes actually consumed (0 if not enough data available). </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Also advances the item index: whole items are consumed, and a partial pop into an item shrinks that item's tracked size. When all data is consumed, internal positions reset to reuse buffer space. </dd></dl>
-
-</div>
-</div>
 <a id="ga8fbdac843949ee17f28178df3a197de9" name="ga8fbdac843949ee17f28178df3a197de9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8fbdac843949ee17f28178df3a197de9">&#9670;&#160;</a></span>ANB_fifoslab_pop_item()</h2>
 
@@ -439,14 +345,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga33e69ac05b03961608f846a4eab94ddb" name="ga33e69ac05b03961608f846a4eab94ddb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga33e69ac05b03961608f846a4eab94ddb">&#9670;&#160;</a></span>ANB_fifoslab_push()</h2>
+<a id="ga4875699f398f535e9325e81fe230fee8" name="ga4875699f398f535e9325e81fe230fee8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4875699f398f535e9325e81fe230fee8">&#9670;&#160;</a></span>ANB_fifoslab_push_item()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ANB_fifoslab_push </td>
+          <td class="memname">void ANB_fifoslab_push_item </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *</td>          <td class="paramname"><span class="paramname"><em>queue</em></span>, </td>
         </tr>
@@ -463,7 +369,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Push data onto the end of the queue. </p>
+<p>Push data onto the end of the queue as a discrete item. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>The queue. Must not be NULL. </td></tr>
@@ -473,6 +379,32 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Data is stored with max_align_t alignment padding. The buffer consumes ALIGN_UP(data_len) bytes internally. Padding bytes are zeroed. Buffer and item index grow automatically if needed. </dd></dl>
+
+</div>
+</div>
+<a id="gacff07453b8629c5f5c6f72daad54df63" name="gacff07453b8629c5f5c6f72daad54df63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacff07453b8629c5f5c6f72daad54df63">&#9670;&#160;</a></span>ANB_fifoslab_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t ANB_fifoslab_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga46c805103d80a911a68afbafd9a9898a">ANB_FifoSlab_t</a> *</td>          <td class="paramname"><span class="paramname"><em>queue</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the total number of bytes currently in use (including alignment padding). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">queue</td><td>The queue. Must not be NULL. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total bytes occupied by all items in the queue. </dd></dl>
 
 </div>
 </div>

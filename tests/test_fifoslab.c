@@ -10,49 +10,7 @@ void setUp(void) {}
 void tearDown(void) {}
 
 /* ------------------------------------------------------------------ */
-/* 1. Raw byte-level push / peek / pop with C strings                 */
-/* ------------------------------------------------------------------ */
-void test_push_peek_pop_strings(void) {
-    const char *strings[] = {"hello", "world", "foo", "barbaz", "x"};
-    const size_t count = sizeof(strings) / sizeof(strings[0]);
-
-    ANB_FifoSlab_t *q = ANB_fifoslab_create(256);
-    TEST_ASSERT_NOT_NULL(q);
-
-    size_t expected_total = 0;
-    for (size_t i = 0; i < count; i++) {
-        size_t len = strlen(strings[i]) + 1;            /* include '\0' */
-        ANB_fifoslab_push(q, (const uint8_t *)strings[i], len);
-        expected_total += ALIGN_UP(len);
-    }
-
-    /* peek_size should equal the sum of all aligned lengths */
-    TEST_ASSERT_EQUAL_size_t(expected_total, ANB_fifoslab_peek_size(q));
-
-    /* peek the full size — first bytes must be the first string */
-    uint8_t *ptr = ANB_fifoslab_peek(q, expected_total);
-    TEST_ASSERT_NOT_NULL(ptr);
-    TEST_ASSERT_EQUAL_STRING("hello", (const char *)ptr);
-
-    /* pop each string one at a time and verify the next one via peek */
-    for (size_t i = 0; i < count; i++) {
-        size_t aligned = ALIGN_UP(strlen(strings[i]) + 1);
-        size_t remaining = ANB_fifoslab_peek_size(q);
-
-        ptr = ANB_fifoslab_peek(q, aligned);
-        TEST_ASSERT_NOT_NULL(ptr);
-        TEST_ASSERT_EQUAL_STRING(strings[i], (const char *)ptr);
-
-        size_t popped = ANB_fifoslab_pop(q, aligned);
-        TEST_ASSERT_EQUAL_size_t(aligned, popped);
-    }
-
-    TEST_ASSERT_EQUAL_size_t(0, ANB_fifoslab_peek_size(q));
-    ANB_fifoslab_destroy(q);
-}
-
-/* ------------------------------------------------------------------ */
-/* 2. Item-level push / peek_item / pop_item with C strings           */
+/* 1. Item-level push / peek_item / pop_item with C strings           */
 /* ------------------------------------------------------------------ */
 void test_push_peek_item_pop_item_strings(void) {
     const char *strings[] = {"alpha", "bravo", "charlie", "delta", "echo"};
@@ -63,7 +21,7 @@ void test_push_peek_item_pop_item_strings(void) {
 
     for (size_t i = 0; i < count; i++) {
         size_t len = strlen(strings[i]) + 1;
-        ANB_fifoslab_push(q, (const uint8_t *)strings[i], len);
+        ANB_fifoslab_push_item(q, (const uint8_t *)strings[i], len);
     }
 
     TEST_ASSERT_EQUAL_size_t(count, ANB_fifoslab_item_count(q));
@@ -88,7 +46,7 @@ void test_push_peek_item_pop_item_strings(void) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 3. Struct + trailing string composite blobs                        */
+/* 2. Struct + trailing string composite blobs                        */
 /* ------------------------------------------------------------------ */
 typedef struct {
     uint32_t id;
@@ -118,7 +76,7 @@ void test_aligned_struct_with_trailing_string(void) {
         memcpy(buf, &records[i], sizeof(TestRecord));
         memcpy(buf + sizeof(TestRecord), labels[i], label_len);
 
-        ANB_fifoslab_push(q, buf, blob_size);
+        ANB_fifoslab_push_item(q, buf, blob_size);
     }
 
     TEST_ASSERT_EQUAL_size_t(count, ANB_fifoslab_item_count(q));
@@ -152,46 +110,7 @@ void test_aligned_struct_with_trailing_string(void) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 4. Push struct then string; raw-pop the struct, item-pop the string */
-/* ------------------------------------------------------------------ */
-void test_raw_pop_struct_then_item_pop_string(void) {
-    TestRecord rec = {42, 9.81f, 0xBEEF};
-    const char *msg = "hello-mixed";
-    size_t msg_len = strlen(msg) + 1;
-
-    ANB_FifoSlab_t *q = ANB_fifoslab_create(256);
-    TEST_ASSERT_NOT_NULL(q);
-
-    /* Push struct as item 0, string as item 1 */
-    ANB_fifoslab_push(q, (const uint8_t *)&rec, sizeof(TestRecord));
-    ANB_fifoslab_push(q, (const uint8_t *)msg, msg_len);
-    TEST_ASSERT_EQUAL_size_t(2, ANB_fifoslab_item_count(q));
-
-    /* Raw-pop exactly the struct's aligned size */
-    size_t struct_aligned = ALIGN_UP(sizeof(TestRecord));
-    size_t popped = ANB_fifoslab_pop(q, struct_aligned);
-    TEST_ASSERT_EQUAL_size_t(struct_aligned, popped);
-
-    /* Item 0 in the index was consumed by raw pop; item_count should be 1 */
-    TEST_ASSERT_EQUAL_size_t(1, ANB_fifoslab_item_count(q));
-
-    /* peek_item(0) should now be the string */
-    size_t item_size = 0;
-    uint8_t *data = ANB_fifoslab_peek_item(q, 0, &item_size);
-    TEST_ASSERT_NOT_NULL(data);
-    TEST_ASSERT_EQUAL_size_t(ALIGN_UP(msg_len), item_size);
-    TEST_ASSERT_EQUAL_STRING(msg, (const char *)data);
-
-    /* pop_item should return the string's aligned size */
-    size_t sz = ANB_fifoslab_pop_item(q);
-    TEST_ASSERT_EQUAL_size_t(ALIGN_UP(msg_len), sz);
-    TEST_ASSERT_EQUAL_size_t(0, ANB_fifoslab_item_count(q));
-
-    ANB_fifoslab_destroy(q);
-}
-
-/* ------------------------------------------------------------------ */
-/* 5. O(1) iterator over items                                        */
+/* 3. O(1) iterator over items                                        */
 /* ------------------------------------------------------------------ */
 void test_peek_item_iter(void) {
     const char *strings[] = {"alpha", "bravo", "charlie", "delta", "echo"};
@@ -202,7 +121,7 @@ void test_peek_item_iter(void) {
 
     for (size_t i = 0; i < count; i++) {
         size_t len = strlen(strings[i]) + 1;
-        ANB_fifoslab_push(q, (const uint8_t *)strings[i], len);
+        ANB_fifoslab_push_item(q, (const uint8_t *)strings[i], len);
     }
 
     /* Iterate all items via the O(1) iterator */
@@ -238,12 +157,40 @@ void test_peek_item_iter(void) {
 }
 
 /* ------------------------------------------------------------------ */
+/* 4. ANB_fifoslab_size reports total bytes in use                     */
+/* ------------------------------------------------------------------ */
+void test_size(void) {
+    ANB_FifoSlab_t *q = ANB_fifoslab_create(256);
+    TEST_ASSERT_NOT_NULL(q);
+
+    TEST_ASSERT_EQUAL_size_t(0, ANB_fifoslab_size(q));
+
+    const char *a = "hello";
+    const char *b = "world!!";
+    size_t a_len = strlen(a) + 1;
+    size_t b_len = strlen(b) + 1;
+
+    ANB_fifoslab_push_item(q, (const uint8_t *)a, a_len);
+    TEST_ASSERT_EQUAL_size_t(ALIGN_UP(a_len), ANB_fifoslab_size(q));
+
+    ANB_fifoslab_push_item(q, (const uint8_t *)b, b_len);
+    TEST_ASSERT_EQUAL_size_t(ALIGN_UP(a_len) + ALIGN_UP(b_len), ANB_fifoslab_size(q));
+
+    ANB_fifoslab_pop_item(q);
+    TEST_ASSERT_EQUAL_size_t(ALIGN_UP(b_len), ANB_fifoslab_size(q));
+
+    ANB_fifoslab_pop_item(q);
+    TEST_ASSERT_EQUAL_size_t(0, ANB_fifoslab_size(q));
+
+    ANB_fifoslab_destroy(q);
+}
+
+/* ------------------------------------------------------------------ */
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_push_peek_pop_strings);
     RUN_TEST(test_push_peek_item_pop_item_strings);
     RUN_TEST(test_aligned_struct_with_trailing_string);
-    RUN_TEST(test_raw_pop_struct_then_item_pop_string);
     RUN_TEST(test_peek_item_iter);
+    RUN_TEST(test_size);
     return UNITY_END();
 }

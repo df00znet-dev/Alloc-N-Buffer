@@ -6,14 +6,12 @@
  * libFuzzer harness for ANB_FifoSlab.
  *
  * Interprets fuzz input as a stream of commands:
- *   0 = push        (next 2 bytes = length LE, then that many bytes = data)
- *   1 = pop         (next 2 bytes = length LE)
- *   2 = pop_item
- *   3 = peek        (next 2 bytes = length LE)
- *   4 = peek_item   (next 1 byte  = index)
- *   5 = peek_size
- *   6 = item_count
- *   7 = peek_item_iter (iterate all items from the start)
+ *   0 = push_item   (next 2 bytes = length LE, then that many bytes = data)
+ *   1 = pop_item
+ *   2 = peek_item   (next 1 byte  = index)
+ *   3 = item_count
+ *   4 = peek_item_iter (iterate all items from the start)
+ *   5 = size
  *
  * Goal: no crashes, no ASAN/UBSAN violations under any input.
  */
@@ -27,10 +25,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     size_t i = 0;
     while (i < size) {
-        uint8_t cmd = data[i++] % 8;
+        uint8_t cmd = data[i++] % 6;
 
         switch (cmd) {
-        case 0: { /* push */
+        case 0: { /* push_item */
             if (i + 2 > size) goto done;
             uint16_t len = read_u16(data + i);
             i += 2;
@@ -38,31 +36,15 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
             if (len > 4096) len = 4096;
             if (len == 0) break;
             if (i + len > size) len = (uint16_t)(size - i);
-            ANB_fifoslab_push(q, data + i, len);
+            ANB_fifoslab_push_item(q, data + i, len);
             i += len;
             break;
         }
-        case 1: { /* pop */
-            if (i + 2 > size) goto done;
-            uint16_t len = read_u16(data + i);
-            i += 2;
-            ANB_fifoslab_pop(q, len);
-            break;
-        }
-        case 2: { /* pop_item */
+        case 1: { /* pop_item */
             ANB_fifoslab_pop_item(q);
             break;
         }
-        case 3: { /* peek */
-            if (i + 2 > size) goto done;
-            uint16_t len = read_u16(data + i);
-            i += 2;
-            volatile uint8_t *p = ANB_fifoslab_peek(q, len);
-            /* Touch first byte if non-NULL so ASAN catches bad pointers */
-            if (p) { (void)*p; }
-            break;
-        }
-        case 4: { /* peek_item */
+        case 2: { /* peek_item */
             if (i + 1 > size) goto done;
             uint8_t idx = data[i++];
             size_t item_size = 0;
@@ -70,21 +52,21 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
             if (p) { (void)*p; }
             break;
         }
-        case 5: { /* peek_size */
-            ANB_fifoslab_peek_size(q);
-            break;
-        }
-        case 6: { /* item_count */
+        case 3: { /* item_count */
             ANB_fifoslab_item_count(q);
             break;
         }
-        case 7: { /* peek_item_iter — iterate all items */
+        case 4: { /* peek_item_iter — iterate all items */
             ANB_FifoSlabIter_t iter = {0};
             size_t item_size = 0;
             volatile uint8_t *p;
             while ((p = ANB_fifoslab_peek_item_iter(q, &iter, &item_size)) != NULL) {
                 (void)*p;
             }
+            break;
+        }
+        case 5: { /* size */
+            ANB_fifoslab_size(q);
             break;
         }
         }

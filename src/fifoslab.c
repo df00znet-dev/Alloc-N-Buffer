@@ -51,7 +51,7 @@ void ANB_fifoslab_destroy(ANB_FifoSlab_t* queue) {
     }
 }
 
-void ANB_fifoslab_push(ANB_FifoSlab_t* queue, const uint8_t* data, size_t data_len) {
+void ANB_fifoslab_push_item(ANB_FifoSlab_t* queue, const uint8_t* data, size_t data_len) {
     assert(queue != NULL);
     assert(data != NULL);
 
@@ -87,47 +87,9 @@ void ANB_fifoslab_push(ANB_FifoSlab_t* queue, const uint8_t* data, size_t data_l
     queue->index[queue->index_write++] = aligned_len;
 }
 
-size_t ANB_fifoslab_peek_size(ANB_FifoSlab_t* queue) {
+size_t ANB_fifoslab_size(ANB_FifoSlab_t* queue) {
     assert(queue != NULL);
     return queue->write_pos - queue->read_pos;
-}
-
-uint8_t *ANB_fifoslab_peek(ANB_FifoSlab_t* queue, size_t requested_len) {
-    if (queue == NULL || requested_len == 0 || requested_len > (queue->write_pos - queue->read_pos)) {
-        return NULL;
-    }
-    return queue->data + queue->read_pos;
-}
-
-size_t ANB_fifoslab_pop(ANB_FifoSlab_t* queue, size_t requested_len) {
-  uint8_t *data = ANB_fifoslab_peek(queue, requested_len);
-  if (data == NULL) {
-      return 0;
-  }
-  queue->read_pos += requested_len;
-
-  // Advance index to match: consume whole items, reduce partial
-  size_t remaining = requested_len;
-  while (remaining > 0 && queue->index_read < queue->index_write) {
-      size_t item_size = queue->index[queue->index_read];
-      if (remaining >= item_size) {
-          remaining -= item_size;
-          queue->index_read++;
-      } else {
-          queue->index[queue->index_read] -= remaining;
-          remaining = 0;
-      }
-  }
-
-  // If all data has been read, reset positions to avoid overflow
-  // This also helps in reusing the buffer space
-  if (queue->read_pos == queue->write_pos) {
-      queue->read_pos = 0;
-      queue->write_pos = 0;
-      queue->index_read = 0;
-      queue->index_write = 0;
-  }
-  return requested_len;
 }
 
 size_t ANB_fifoslab_item_count(ANB_FifoSlab_t* queue) {
@@ -138,6 +100,7 @@ size_t ANB_fifoslab_item_count(ANB_FifoSlab_t* queue) {
 uint8_t *ANB_fifoslab_peek_item(ANB_FifoSlab_t* queue, size_t n, size_t *out_size) {
     assert(queue != NULL);
     if (n >= queue->index_write - queue->index_read) {
+        *out_size = 0;
         return NULL;
     }
 
