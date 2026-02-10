@@ -28,10 +28,9 @@ CMake produces both static (`allocnbuffer_static`) and shared (`allocnbuffer_sha
 
 All pushed data is padded to `max_align_t` alignment (typically 16 bytes on 64-bit). This affects everything:
 
-- `peek_size()` returns the sum of **aligned** sizes, not original data lengths
 - `peek_item(q, n, &size)` writes the **aligned** size to `*size`
 - `pop_item()` returns the **aligned** size
-- `pop(q, len)` consumes `len` raw bytes **and** advances the item index proportionally
+- `size()` returns the total bytes in use (sum of aligned item sizes)
 
 Use `ALIGN_UP(x) = ((x + _Alignof(max_align_t) - 1) & ~(_Alignof(max_align_t) - 1))` to compute aligned sizes from original data lengths.
 
@@ -43,10 +42,8 @@ Use `ALIGN_UP(x) = ((x + _Alignof(max_align_t) - 1) & ~(_Alignof(max_align_t) - 
 |---|---|
 | `ANB_fifoslab_create(size)` | Allocate queue with initial capacity (aborts on failure) |
 | `ANB_fifoslab_destroy(q)` | Free queue (NULL-safe) |
-| `ANB_fifoslab_push(q, data, len)` | Append data (auto-grows, pads to alignment) |
-| `ANB_fifoslab_peek_size(q)` | Total readable bytes (aligned) |
-| `ANB_fifoslab_peek(q, len)` | Pointer to read position, or NULL |
-| `ANB_fifoslab_pop(q, len)` | Consume raw bytes, returns count or 0 |
+| `ANB_fifoslab_push_item(q, data, len)` | Append data as a discrete item (auto-grows, pads to alignment) |
+| `ANB_fifoslab_size(q)` | Total bytes in use (sum of aligned item sizes) |
 | `ANB_fifoslab_item_count(q)` | Number of discrete items |
 | `ANB_fifoslab_peek_item(q, n, &sz)` | Pointer to item n, or NULL (O(n) offset walk) |
 | `ANB_fifoslab_peek_item_iter(q, &iter, &sz)` | O(1) per-step item iterator, returns NULL when done |
@@ -62,8 +59,7 @@ Data is stored in a contiguous buffer with a contiguous `size_t[]` index, so cac
 
 - Prefix: `ANB_fifoslab_` for all public symbols
 - Internal macros: `ANB_FS_` prefix
-- Error handling: `assert()` for preconditions (NULL queue, NULL data, zero initial_size). No graceful error returns except where documented (peek returns NULL, pop returns 0).
-- Byte-level and item-level APIs share state. Mixing them is valid but the caller must pop aligned boundaries to keep item tracking consistent.
+- Error handling: `assert()` for preconditions (NULL queue, NULL data, zero initial_size). No graceful error returns except where documented (peek_item returns NULL, pop_item returns 0).
 
 ## Using as a dependency
 

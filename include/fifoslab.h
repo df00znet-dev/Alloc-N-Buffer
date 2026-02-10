@@ -16,8 +16,8 @@
  * @brief Opaque FIFO slab allocator / buffer queue with item tracking.
  *
  * All pushed data is padded to max_align_t alignment. Sizes reported by
- * peek_size, peek_item, pop, and pop_item reflect the aligned size, not
- * the original data_len passed to push.
+ * peek_item and pop_item reflect the aligned size, not the original
+ * data_len passed to push_item.
  */
 typedef struct ANB_FifoSlab ANB_FifoSlab_t;
 
@@ -38,7 +38,7 @@ void ANB_fifoslab_destroy(ANB_FifoSlab_t* queue);
 
 /**
  * @ingroup ANB_FifoSlab
- * @brief Push data onto the end of the queue.
+ * @brief Push data onto the end of the queue as a discrete item.
  * @param queue The queue. Must not be NULL.
  * @param data Pointer to data to copy. Must not be NULL.
  * @param data_len Number of bytes to copy.
@@ -46,39 +46,15 @@ void ANB_fifoslab_destroy(ANB_FifoSlab_t* queue);
  *       consumes ALIGN_UP(data_len) bytes internally. Padding bytes are
  *       zeroed. Buffer and item index grow automatically if needed.
  */
-void ANB_fifoslab_push(ANB_FifoSlab_t* queue, const uint8_t* data, size_t data_len);
+void ANB_fifoslab_push_item(ANB_FifoSlab_t* queue, const uint8_t* data, size_t data_len);
 
 /**
  * @ingroup ANB_FifoSlab
- * @brief Get the number of bytes available to read (including alignment padding).
+ * @brief Get the total number of bytes currently in use (including alignment padding).
  * @param queue The queue. Must not be NULL.
- * @return Total unread bytes in the queue (sum of aligned item sizes).
+ * @return Total bytes occupied by all items in the queue.
  */
-size_t ANB_fifoslab_peek_size(ANB_FifoSlab_t* queue);
-
-/**
- * @ingroup ANB_FifoSlab
- * @brief Peek at data without consuming it.
- * @param queue The queue.
- * @param requested_len Minimum bytes required. Must be > 0.
- * @return Pointer to the read position, or NULL if fewer than requested_len
- *         bytes are available, or if queue is NULL or requested_len is 0.
- * @note The returned pointer is valid until the next push or pop.
- *       Caller must only read up to requested_len bytes from the returned pointer.
- */
-uint8_t *ANB_fifoslab_peek(ANB_FifoSlab_t* queue, size_t requested_len);
-
-/**
- * @ingroup ANB_FifoSlab
- * @brief Consume bytes from the front of the queue.
- * @param queue The queue.
- * @param requested_len Number of bytes to consume.
- * @return Number of bytes actually consumed (0 if not enough data available).
- * @note Also advances the item index: whole items are consumed, and a
- *       partial pop into an item shrinks that item's tracked size.
- *       When all data is consumed, internal positions reset to reuse buffer space.
- */
-size_t ANB_fifoslab_pop(ANB_FifoSlab_t* queue, size_t requested_len);
+size_t ANB_fifoslab_size(ANB_FifoSlab_t* queue);
 
 /**
  * @ingroup ANB_FifoSlab
