@@ -32,6 +32,7 @@ var NAVTREE =
       [ "Alignment and size recovery", "md_Alloc-N-Buffer.html#autotoc_md4", null ],
       [ "Key behaviors", "md_Alloc-N-Buffer.html#autotoc_md5", null ]
     ] ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ]

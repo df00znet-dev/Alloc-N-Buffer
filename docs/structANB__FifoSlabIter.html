@@ -88,11 +88,11 @@ $(function(){initNavTree('structANB__FifoSlabIter.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ANB_FifoSlabIter Struct Reference</div></div>
+  <div class="headertitle"><div class="title">ANB_FifoSlabIter Struct Reference<div class="ingroups"><a class="el" href="group__ANB__FifoSlab.html">ANB_FifoSlab</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Iterator state for O(1)-per-step item traversal.  
+<p>Iterator state for O(1)-per-step item traversal. Use peek_item_iter if you need to iterate through all items in order without random access.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="fifoslab_8h_source.html">fifoslab.h</a>&gt;</code></p>
@@ -105,8 +105,8 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_item_idx</b></td><
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_byte_offset</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Iterator state for O(1)-per-step item traversal. </p>
-<p>Initialize to zero before first use: <a class="el" href="fifoslab_8h.html#a54096c3dd8725c2a84c05fa89a0b0b0e" title="Iterator state for O(1)-per-step item traversal.">ANB_FifoSlabIter_t</a> iter = {0};</p>
+<div class="textblock"><p>Iterator state for O(1)-per-step item traversal. Use peek_item_iter if you need to iterate through all items in order without random access. </p>
+<p>Initialize to zero before first use: <a class="el" href="group__ANB__FifoSlab.html#ga54096c3dd8725c2a84c05fa89a0b0b0e" title="Iterator state for O(1)-per-step item traversal. Use peek_item_iter if you need to iterate through al...">ANB_FifoSlabIter_t</a> iter = {0};</p>
 <p>Pushing or popping while an iterator is live is undefined behavior. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="fifoslab_8h_source.html">fifoslab.h</a></li>
